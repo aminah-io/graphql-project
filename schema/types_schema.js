@@ -1,77 +1,59 @@
 const graphql = require('graphql');
 
- const {
-     GraphQLObjectType,
-     GraphQLID,
-     GraphQLString,
-     GraphQLInt,
-     GraphQLBoolean,
-     GraphQLFloat,
-     GraphQLSchema,
-     GraphQLNonNull
+const {
+	GraphQLSchema,
+  GraphQLObjectType,
+	GraphQLID,
+	GraphQLString,
+	GraphQLBoolean,
+	GraphQLInt,
+	GraphQLFloat,
+	GraphQLNonNull
+} = graphql
 
- } = graphql
+// Scalar Types -- Not an object, per se, but an integer or float
 
-//Scalar Type
 /*
-  String = GraphQLString
-  int
-  Float
-  Boolean
-  ID
-
+	String = GraphQLString
+	Int
+	Float
+	Boolean
+	ID -- native, unique identifier
 */
 
 const Person = new GraphQLObjectType({
-      name: 'Person',
-      description: 'Represents a Person Type',
-      fields: () => ({
-           id: {type: GraphQLID},
-           name: {type: new GraphQLNonNull(GraphQLString) },
-           age: {type: GraphQLInt},
-           isMarried: {type: GraphQLBoolean},
-           gpa: {type: GraphQLFloat},
-
-           justAType: {
-               type: Person,
-               resolve(parent, args) {
-                   return parent; 
-               }
-           }
-      })
+	name: 'Person',
+	description: 'Represents a person type',
+	fields: () => ({
+		id: { type: GraphQLID },
+		name: { type: GraphQLNonNull(GraphQLString) },
+		age: { type: GraphQLInt },
+		isMarried: { type: GraphQLBoolean },
+		gpa: { type: GraphQLFloat }
+	})
 });
 
-//RootQuery
 const RootQuery = new GraphQLObjectType({
-    name: 'RootQueryType',
-    description: 'Description',
-    fields: {
-        person: {
-            type: Person,
-            //args: {id: {type: GraphQLString}},
-            resolve(parent, args) {
-                  //we resolve with data
-                  //get and return data from a datasource
-
-                  let personObj = {
-                      //id: {type: GraphQLID},
-                      name: 'Antonio',
-                      age: 34,
-                      isMarried: true,
-                      gpa: 4.0,
-
-                  };
-
-                   return personObj;
-                  }
-       }
-         
-       
-    }
+	name: 'RootQueryType',
+	description: 'Root query type',
+	fields: {
+		person: {
+			type: Person,
+			resolve(parent, args) {
+				let personObj = {
+					name: null,
+					age: 35,
+					isMarried: true,
+					gpa: 3.7
+				}
+				return personObj;
+			}
+		}
+	}
 });
 
 module.exports = new GraphQLSchema({
-    query: RootQuery,
+  query: RootQuery,
 });
 
 
